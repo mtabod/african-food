@@ -1,0 +1,10 @@
+/* Empty. Add your own CSS if you like */
+body, ion-content{
+    background-color:rgb(201, 201, 52);
+}
+
+ion-content > span {
+    font-weight: bold;
+    text-align: center;
+    display: block;
+}
