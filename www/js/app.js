@@ -8,21 +8,15 @@ angular.module('app', ['ionic'])
 {
   var dbSize = 5 * 1024 * 1024; // 5MB
   $scope.webdb = {};
-  // open database
   var db  = openDatabase("AfricanFoods", "1", "Todo manager", dbSize);
-
-  //create table to use
   db.transaction(function (tx) 
   {
-      tx.executeSql("CREATE TABLE IF NOT EXISTS " +
-          "UserCredentials(username TEXT PRIMARY KEY, password TEXT)", [],
+      tx.executeSql("CREATE TABLE IF NOT EXISTS Users(username TEXT PRIMARY KEY, password TEXT)", [],
           function () 
           {
-              console.log("Created");
           },
           function () 
           {
-             console.log("Create failure") 
           }
       );
   });                
@@ -31,22 +25,19 @@ angular.module('app', ['ionic'])
   {
     db.transaction(function (tx) 
     {
-      tx.executeSql("SELECT * FROM UserCredentials where username=? and password=?", 
-                      [$scope.username,$scope.password],
+      tx.executeSql("SELECT * FROM Users where username=? and password=?",[$scope.username,$scope.password],
         function (tx, rs) 
         {
           for (var i = 0; i < rs.rows.length; i++) 
           {
-            document.cookie = "LoginName="+$scope.username;
             window.location="home.html";
             break;
           }
-          $scope.loginerror="Invalid Username/Password";
+          $scope.loginerror="Invalid Username or Password";
           $scope.$apply();
         },
         function (err) 
         {
-          console.log("Read failed");
         });
       }
     );
@@ -58,28 +49,23 @@ angular.module('app', ['ionic'])
     {
       if($scope.password!=$scope.confirmpassword)
       {
-        $scope.registererror="Passwords don't match";
+        $scope.registererror="Passwords do not match";
         $scope.$apply();
       }
       else
       {      
         db.transaction(function (tx) 
         {
-          tx.executeSql("INSERT INTO UserCredentials(username,password) VALUES(?, ?) ",
+          tx.executeSql("INSERT INTO Users(username,password) VALUES(?, ?) ",
               [$scope.username,$scope.password],
               function () 
               {
-                $scope.username="";
-                $scope.password="";
-                $scope.confirmpassword="";
-                console.log("Inserted");
-                $scope.registererror="Registered successfully!.Login to continue";
+                $scope.registererror="Registered successfully!";
                 $scope.$apply();
               },
               function () 
               {
-                console.log("Insert failed");
-                $scope.registererror="Username already exists. Please enter a different Username";
+                $scope.registererror="Username already exists. So Please enter a different Username";
                 $scope.$apply();          
               }
           );

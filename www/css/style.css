@@ -8,3 +8,7 @@ ion-content > span {
     text-align: center;
     display: block;
 }
+
+#id1{
+    background-image:"1.png";
+}
